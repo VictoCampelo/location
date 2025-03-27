@@ -8,8 +8,18 @@ const path = require("path");
 const app = express();
 const port = process.env.PORT || 8088;
 
-// Middleware para permitir CORS e processar JSON
+// Configuração CORS
+const corsOptions = {
+  origin: 'https://9463-2804-1b3-a9c0-3ce2-99f9-c318-9ebf-c028.ngrok-free.app', // Substitua pela URL do seu frontend do Ngrok
+  methods: ['GET', 'POST'],
+  allowedHeaders: ['Content-Type'],
+};
+
 app.use(cors());
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));  // Permite o preflight
+
+// Middleware para permitir CORS e processar JSON
 app.use(bodyParser.json());
 
 // Substitua com o token do seu bot

